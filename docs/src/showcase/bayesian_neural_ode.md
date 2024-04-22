@@ -8,7 +8,7 @@ Bayesian Neural ODE: NUTS sampler is shown.
 
 !!! note
 
-    For more details, have a look at this paper: https://arxiv.org/abs/2012.07244
+    For more details, have a look at this paper: ![https://arxiv.org/abs/2012.07244](https://arxiv.org/abs/2012.07244)
 
 ## Step 1: Import Libraries
 
@@ -16,13 +16,13 @@ For this example, we will need the following libraries:
 
 ```@example bnode
 # SciML Libraries
-using DiffEqFlux, DifferentialEquations
+using DifferentialEquations
 
 # ML Tools
 using Lux, Zygote
 
 # External Tools
-using Random, Plots, AdvancedHMC, MCMCChains, StatsPlots, ComponentArrays
+using Random, AdvancedHMC, MCMCChains, StatsPlots, ComponentArrays
 ```
 
 ## Setup: Get the data from the Spiral ODE example
@@ -63,7 +63,7 @@ p = ComponentArray{Float64}(p)
 const _p = p
 ```
 
-Note that the `f64` is required to put the Flux neural network into Float64 precision.
+Note that the `f64` is required to put the Lux neural network into Float64 precision.
 
 ## Step 3: Define the loss function for the Neural ODE.
 
@@ -81,11 +81,14 @@ end
 
 ## Step 4: Now we start integrating the Bayesian estimation workflow as prescribed by the AdvancedHMC interface with the NeuralODE defined above
 
-The AdvancedHMC interface requires us to specify: (a) the Hamiltonian log density and its gradient , (b) the sampler and (c) the step size adaptor function.
+The AdvancedHMC interface requires us to specify: 
+1. the Hamiltonian log density and its gradient , 
+2. the sampler and 
+3. the step size adaptor function.
 
 For the Hamiltonian log density, we use the loss function. The θ*θ term denotes the use of Gaussian priors.
 
-The user can make several modifications to Step 4. The user can try different acceptance ratios, warmup samples and posterior samples. One can also use the Variational Inference (ADVI) framework, which doesn't work quite as well as NUTS. The SGLD (Stochastic Gradient Langevin Descent) sampler is seen to have a better performance than NUTS. Have a look at https://sebastiancallh.github.io/post/langevin/ for a brief introduction to SGLD.
+The user can make several modifications to Step 4. The user can try different acceptance ratios, warmup samples and posterior samples. One can also use the Variational Inference (ADVI) framework, which doesn't work quite as well as NUTS. The SGLD (Stochastic Gradient Langevin Descent) sampler is seen to have a better performance than NUTS. Have a look at ![https://sebastiancallh.github.io/post/langevin/](https://sebastiancallh.github.io/post/langevin/) for a brief introduction to SGLD.
 
 ```@example bnode
 l(θ) = -sum(abs2, ode_data .- predict_neuralode(θ)) - sum(θ .* θ)
